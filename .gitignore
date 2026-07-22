@@ -1,0 +1,11 @@
+.DS_Store
+*.swp
+*~
+*.log
+.bash_history
+.zsh_history
+*.key
+*.pem
+id_ed25519*
+id_rsa*
+niri/state.kdl
