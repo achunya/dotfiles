@@ -1,0 +1,22 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=2 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+    tab name="Regular" {
+        pane split_direction="vertical" {
+            // Left side (Scale of 2)
+            pane size="66%" 
+            // Right side (Two panes, Scale of 1 each)
+            pane split_direction="horizontal" {
+                pane
+                pane
+            }
+        }
+    }
+}

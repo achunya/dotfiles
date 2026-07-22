@@ -1,0 +1,256 @@
+// Monitor
+output "eDP-1" {
+    mode "1920x1080@60"
+    scale 1.1
+}
+
+// Input
+input {
+    keyboard {
+        xkb {
+            layout "us,ru"
+            options "grp:alt_shift_toggle,caps:escape"
+        }
+    }
+    touchpad { 
+        tap
+        accel-speed 0.3
+        }
+    mouse { accel-speed 0.2; }
+}
+// Gestures
+gestures {
+    dnd-edge-workspace-switch {
+        trigger-height 10
+        delay-ms 100
+        max-speed 100
+    }
+}
+// Enviroment variables
+environment {
+    QT_QPA_PLATFORM "wayland"
+    MOZ_ENABLE_WAYLAND "1"
+}
+// Cursor Settings
+cursor {
+    xcursor-theme "Bibata-Modern-Ice"
+    xcursor-size 22
+    hide-when-typing
+    hide-after-inactive-ms 1000
+}
+
+// Layout & Visuals 
+layout {
+    gaps 4
+    border {
+        width 1
+        active-color "#3b4252"
+        inactive-color "#2e3440"
+    }
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+    default-column-width { proportion 0.5; }
+    focus-ring {
+        on
+        width 3
+        active-color "#7fc8ff"
+        inactive-color "#505050"
+        urgent-color "#9b0000"
+    }
+}
+// Overview
+overview {
+    zoom 0.35
+    backdrop-color "#253440"
+}
+// Skips the startup hints
+hotkey-overlay {
+    skip-at-startup
+}
+// Miscellaneous
+prefer-no-csd
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+// Lid Lock
+switch-events { lid-close { spawn "sh" "-c" "hyprlock & systemctl suspend"; }; }
+// Autostart
+spawn-at-startup "alacritty"
+spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri DISPLAY"
+spawn-at-startup "hypridle"
+spawn-at-startup "waybar"
+spawn-at-startup "swaybg" "-i" "~.config/niri/Wallpapers/choosen.jpg" "-m" "fill"
+spawn-at-startup "copyq"
+spawn-at-startup "swaync"
+spawn-at-startup "sh" "-c" "gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' && gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'"
+//Animations
+animations {
+    slowdown 0.4
+}
+
+// Window Rules 
+window-rule {
+    geometry-corner-radius 10
+    clip-to-geometry true
+}
+window-rule {
+    match is-active=false
+    opacity 0.80
+}
+window-rule {
+    open-maximized false
+}
+window-rule {
+    match app-id="dev.zed.Zed"
+    open-focused true
+    open-maximized true
+}
+window-rule {
+    match at-startup=false
+    match app-id="Alacritty"
+    
+    open-maximized false
+    open-focused true
+    min-width 200
+    min-height 200
+}
+window-rule {
+    match app-id="firefox"
+    match app-id="librewolf"
+    open-focused true
+    open-maximized true
+}
+window-rule {
+    match app-id="org.telegram.desktop"
+    open-maximized true
+}
+window-rule {
+    match app-id="feh"
+    match app-id="nm-connection-editor"
+    match app-id="blueman-manager"
+    match app-id="pavucontrol"
+    match app-id="copyq"
+    open-floating true
+
+    min-width 450
+    max-width 450
+    min-height 300
+    max-height 300
+}
+window-rule {
+    match app-id="spotify"
+    open-focused true
+}
+window-rule {
+    match app-id="Audacity"
+    open-focused true
+}
+// Keybindings 
+binds {
+    // Help Menu
+    Mod+Shift+Slash { show-hotkey-overlay; }
+     // Applications
+    Mod+Return { spawn "alacritty"; }
+    Mod+B      { spawn "firefox"; }
+    Mod+E      { spawn "thunar"; }
+    Mod+D      { spawn "sh" "-c" "~/.config/niri/scripts/laucher.sh"; }
+    Mod+C      { spawn "rofi" "-show" "calc" "-modi" "calc"; }
+    Mod+T      { spawn "Telegram"; }
+    Mod+W      { spawn "sh" "-c" "~/.config/niri/scripts/choose_wallpaper.sh"; } 
+    Mod+S      { spawn "spotify-launcher";}
+    // System Utilities 
+    Mod+Shift+Comma { spawn "hyprlock"; }
+    Mod+N       { spawn "swaync-client" "-t"; }
+    Mod+Shift+V { spawn "copyq" "toggle"; }
+    Mod+Shift+B { spawn "pkill" "waybar"; }
+    Mod+Shift+W { spawn "waybar"; }
+    Mod+Shift+C { spawn "hyprpicker"; }
+    Mod+Shift+Q { spawn "sh" "-c" "~/.config/niri/scripts/hypridle.sh"; }
+    Mod+Shift+P { spawn "shutdown" "now"; }
+    Mod+Shift+R { spawn "reboot"; }
+    Mod+M       { quit; }
+
+    // Screenshots
+    Mod+Shift+A { screenshot; }      
+    Mod+Shift+S { screenshot-screen; }
+    Mod+Print{ screenshot-window; }  
+
+    // Audio and Brightness 
+    XF86AudioRaiseVolume  allow-when-locked=true { spawn "pamixer" "-i" "5"; }
+    XF86AudioLowerVolume  allow-when-locked=true { spawn "pamixer" "-d" "5"; }
+    XF86AudioMute         allow-when-locked=true { spawn "pamixer" "-t" "--toggle-mute"; }
+    XF86AudioMicMute      allow-when-locked=true { spawn "pamixer" "--default-source" "-t"; }
+    XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "s" "5%+"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "s" "5%-"; }
+
+    // Window Actions 
+    Mod+Q { close-window; }
+    Mod+F { fullscreen-window; }
+    Mod+V { toggle-window-floating; }
+    
+    // Niri Layout manipulation 
+    Mod+BracketLeft  { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    Mod+Comma  { consume-window-into-column; }
+    Mod+Period { expel-window-from-column; }
+    Mod+Shift+O { center-column; }
+    
+    Mod+G { maximize-column; }
+    Mod+R { switch-preset-column-width; }
+    Mod+Ctrl+R { reset-window-height; }
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Equal { set-column-width "+10%"; }
+    Mod+Shift+Minus { set-window-height "-10%"; }
+    Mod+Shift+Equal { set-window-height "+10%"; }
+    Mod+Shift+Return { toggle-column-tabbed-display; }
+    // Movements
+    Mod+H  { focus-column-left; }
+    Mod+L  { focus-column-right; }
+    Mod+K  { focus-window-up; }
+    Mod+J  { focus-window-down; }
+    // Moving
+    Mod+Shift+H     { move-column-left; }
+    Mod+Shift+L     { move-column-right; }
+    Mod+Shift+K     { move-window-up; }
+    Mod+Shift+J     { move-window-down; }
+    // Head Tail
+    Mod+Semicolon     { focus-column-first; }
+    Mod+Apostrophe  { focus-column-last; }
+    Mod+Shift+Semicolon { move-column-to-first; }
+    Mod+Shift+Apostrophe  { move-column-to-last; }
+    // Workspaces
+    Mod+Ctrl+1 { focus-workspace 1; }
+    Mod+Ctrl+2 { focus-workspace 2; }
+    Mod+Ctrl+3 { focus-workspace 3; }
+    Mod+Ctrl+4 { focus-workspace 4; }
+    Mod+Ctrl+5 { focus-workspace 5; }
+    Mod+Ctrl+6 { focus-workspace 6; }
+    // Focus specific column from the left in the current workspace
+    Mod+1 { focus-column 1; }
+    Mod+2 { focus-column 2; }
+    Mod+3 { focus-column 3; }
+    Mod+4 { focus-column 4; }
+    Mod+5 { focus-column 5; }
+    Mod+6 { focus-column 6; } 
+    // Ohters
+    Mod+A {toggle-overview;}
+    Alt+Tab { focus-window-previous; }
+    // Move the window into workspace
+    Mod+Shift+1 { move-window-to-workspace 1; }
+    Mod+Shift+2 { move-window-to-workspace 2; }
+    Mod+Shift+3 { move-window-to-workspace 3; }
+    Mod+Shift+4 { move-window-to-workspace 4; }
+    Mod+Shift+5 { move-window-to-workspace 5; }
+    Mod+Shift+6 { move-window-to-workspace 6; }
+    // Workspace navigation
+    Mod+I { focus-workspace-down; }
+    Mod+U { focus-workspace-up; }
+    Mod+Shift+I { move-column-to-workspace-down; }
+    Mod+Shift+U { move-column-to-workspace-up; }
+    // Touchpad Binds
+    Mod+TouchpadScrollDown cooldown-ms=350 { focus-workspace-down; }
+    Mod+TouchpadScrollUp   cooldown-ms=350 { focus-workspace-up; }
+    Mod+TouchpadScrollRight                { focus-column-right; }
+    Mod+TouchpadScrollLeft                 { focus-column-left; }
+}
