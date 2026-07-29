@@ -107,7 +107,7 @@ window#waybar {
   margin: 0 2px;
 }
 
-#custom-batteries {
+#battery {
   background-color: #3B4252;
   padding: 2px 8px;
   border-radius: 8px;

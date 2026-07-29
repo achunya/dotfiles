@@ -3,7 +3,7 @@
   "position": "top",
   "modules-left": [ "custom/arch", "niri/window", "niri/language" ],
   "modules-center": [ "clock" , "custom/playerctl" ],
-  "modules-right": [ "cpu", "memory", "pulseaudio", "backlight", "custom/batteries", "tray" , "custom/swaync"],
+  "modules-right": [ "cpu", "memory", "pulseaudio", "backlight", "battery", "tray" , "custom/swaync"],
 
   "custom/arch": {
     "format": "",
@@ -61,12 +61,6 @@
     "format": " {percent}%",
     "on-scroll-up": "brightnessctl set +5%",
     "on-scroll-down": "brightnessctl set 5%-"
-  },
-
-  "custom/batteries": {
-    "exec": "~/.config/niri/scripts/battery.sh",
-    "interval": 2,
-    "return-type": "json"
   },
 
   "network": {

@@ -1,3 +1,4 @@
+alacritty
 acpi
 audacity
 base
@@ -28,7 +29,6 @@ grub
 gst-plugins-bad
 htop
 hypridle
-hyprland
 hyprlock
 hyprpicker
 iftop
@@ -68,8 +68,8 @@ rust
 sof-firmware
 spotify-launcher
 steam
-stow
 swaync
+swaybg
 terminus-font
 texlive-meta
 tmux
@@ -88,3 +88,6 @@ ydotool
 zellij
 zip
 zram-generator
+xdg-desktop-portal
+xdg-desktop-portal-gnome
+xdg-desktop-portal-wlr

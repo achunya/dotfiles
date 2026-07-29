@@ -1,47 +1,47 @@
 #!/usr/bin/env bash
 
-# Exit immediately if a command fails
+# Terminate execution immediately on command failure
 set -e
 
-echo "==> Updating system & installing base dependencies..."
-sudo pacman -Syu --needed base-devel git stow neovim curl
+# Target directory initialization
+mkdir -p "$HOME/.config"
 
-# Check if paru is already installed
+# System synchronization and base toolchain installation
+sudo pacman -Syu --needed --noconfirm base-devel git neovim curl
+
+# AUR helper availability check and compilation
 if ! command -v paru &> /dev/null; then
-    echo "==> Paru not found. Installing Paru..."
-    
-    # Create temporary directory for building
     BUILD_DIR=$(mktemp -d)
     git clone https://aur.archlinux.org/paru.git "$BUILD_DIR/paru"
     
-    # Build and install paru without root 
+    # Compilation and installation executed as non-root user
     (cd "$BUILD_DIR/paru" && makepkg -si --noconfirm)
     
-    # Clean up build files
     rm -rf "$BUILD_DIR"
-else
-    echo "==> Paru is already installed."
 fi
 
-# Installing the packages 
-echo "==> Installing packages from list..."
-paru -S --needed - < pkglist.txt
+# Batch package installation from manifest file
+if [ -f pkglist.txt ]; then
+    paru -S --needed --noconfirm $(cat pkglist.txt)
+fi
 
-echo "==> Installing vim-plug for Neovim..."
+# Neovim plugin manager installation
 PLUG_PATH="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim"
 if [ ! -f "$PLUG_PATH" ]; then
     curl -fLo "$PLUG_PATH" --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    echo "==> vim-plug installed successfully."
-else
-    echo "==> vim-plug is already installed."
 fi
 
-echo "==> Stowing dotfiles..."
-cd "$HOME/dotfiles"
-stow */
+# Repository path resolution
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "==> Installing Neovim plugins via vim-plug..."
-nvim --headless +PlugInstall +qall
+# Configuration deployment
+# -T flag prevents directory nesting on existing targets
+[ -d "$DOTFILES_DIR/nvim" ]   && cp -rfT "$DOTFILES_DIR/nvim"   "$HOME/.config/nvim"
+[ -d "$DOTFILES_DIR/niri" ]   && cp -rfT "$DOTFILES_DIR/niri"   "$HOME/.config/niri"
+[ -d "$DOTFILES_DIR/waybar" ] && cp -rfT "$DOTFILES_DIR/waybar" "$HOME/.config/waybar"
+[ -d "$DOTFILES_DIR/rofi" ]   && cp -rfT "$DOTFILES_DIR/rofi"   "$HOME/.config/rofi"
+[ -d "$DOTFILES_DIR/zellij" ] && cp -rfT "$DOTFILES_DIR/zellij" "$HOME/.config/zellij"
 
-echo "==> Setup complete!"
+[ -f "$DOTFILES_DIR/vim/.vimrc" ]   && cp -f "$DOTFILES_DIR/vim/.vimrc"   "$HOME/.vimrc"
+[ -f "$DOTFILES_DIR/bash/.bashrc" ] && cp -f "$DOTFILES_DIR/bash/.bashrc" "$HOME/.bashrc"
